@@ -12,26 +12,16 @@
 #include <time.h>
 #include <bitset>
 
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->label_validation->setVisible(false);
+    ui->label_traitement->setVisible(false);
 
     _currentDay = "Lundi";
 
-    /*foreach (QObject *element, ui->tab->children())
-    {
-        if(element->objectName().contains("checkBox"))
-        {
-            _listCheckBox.push_back((QCheckBox*) element);
-            i++;
-        }
-    }*/
     _listCheckBox.push_back(ui->checkBox_1);
     _listCheckBox.push_back(ui->checkBox_2);
     _listCheckBox.push_back(ui->checkBox_3);
@@ -80,6 +70,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _listCheckBox.push_back(ui->checkBox_46);
     _listCheckBox.push_back(ui->checkBox_47);
     _listCheckBox.push_back(ui->checkBox_48);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -92,12 +84,14 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
     ui->label_validation->setVisible(false);
     _currentDay = arg1;
 
-    std::cout << _calendar._days.size() << std::endl;
+    //std::cout << _listCheckBox.size() << std::endl;
+
 
     foreach (CalendarDay cd, _calendar._days){
         if(cd._day == _currentDay){
             int i = 0;
             foreach(QCheckBox* cb, _listCheckBox){
+                std::cout << cb->objectName().toStdString() << std::endl;
                 cb->setChecked(cd._bitArrayDay.at(i));
                 ++i;
             }
@@ -114,9 +108,6 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
     
 }
 
-int MainWindow::calculSeconds(int hours, int minutes){
-    return (hours * 3600) + (minutes * 60);
-}
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -134,7 +125,6 @@ void MainWindow::on_pushButton_clicked()
     bitArrayDay.resize(48);
     for(int i = 0; i < _listCheckBox.size(); i++){
         QCheckBox* cb = _listCheckBox.at(i);
-        std::cout << cb->objectName().toStdString() << std::endl;
         bitArrayDay[i] = cb->isChecked();
     }
 
@@ -164,114 +154,71 @@ void MainWindow::on_pushButton_end_clicked()
 
     int j = 0;
     foreach(QString day, days){
+        // On récupère le calendrier de chaque jour de la semaine
         CalendarDay calendarDay = _calendar.getCalendarDayByName(day);
         //std::cout << j << std::endl;
+        // Si on a un calendrier pour le jour, on récupère son bitArray qu'on met dans le bitArray global
         if (calendarDay._bitArrayDay.size() > 0){
-            for (int i = 0; i < calendarDay._bitArrayDay.size(); i++) {
-                //std::cout << calendarDay._bitArrayDay.at(i);
+            for (int i = 0; i < 48; i++) {
                 bitArrayCalendar[j] = calendarDay._bitArrayDay.at(i);
                 ++j;
             }
         } else {
+            // Sinon on passe que des 0 au bitArray glocal sur 48 bits
             for(int i = 0; i < 48; i++){
                 //std::cout << false;
                 bitArrayCalendar[j] = false;
-                j++;
+                ++j;
             }
         }
         //std::cout << "" <<std::endl;
     }
 
-    /* 1/2 HEURE COURANTE */
-    char *wday[] = {"Dimanche", "Lundi", "Mardi", "Mercredi",
-                    "Jeudi", "Vendredi", "Samedi", "Inconnu"};
+    /* 1/2 HEURE COURANTE DU SYSTEME */
+    QDate systemDate = QDate::currentDate();
+    QTime systemTime = QTime::currentTime();
 
-    struct tm time_check;
-    int year, month, day;
 
-    /*  Input a year, month and day to find the weekday for */
-    year = 2015;
-    month = 6;
-    day = 18;
-
-    /*  load the time_check structure with the data */
-    time_check.tm_year = year - 1900;
-    time_check.tm_mon  = month - 1;
-
-    time_check.tm_mday = day;
-    time_check.tm_hour = 0;
-    time_check.tm_min  = 0;
-    time_check.tm_sec  = 1;
-    time_check.tm_isdst = -1;
-
-    /*  call mktime to fill in the weekday field of the structure */
-    if (mktime(&time_check) == -1)
-        time_check.tm_wday = 7;
-
-    QString systemDay = (QString)wday[time_check.tm_wday];
-    //std::cout << systemDay.toStdString() << std::endl;
-
-    /* Heure système */
-    time_t timer1;
-    time(&timer1);
-    int secondes, minutes, heures;
-    struct tm *newTime1;
-    newTime1 = localtime(&timer1);
-    heures = newTime1->tm_hour;		    // Les heures sont dans "heures"
-    minutes = newTime1->tm_min;		    // Les minutes sont dans "minutes"
-    secondes = newTime1->tm_sec;		// Les secondes sont dans "secondes"
+    int minutes, heures;
+    heures = systemTime.hour();    // Les heures
+    minutes = systemTime.minute(); 	 // Les minutes
 
     //std::cout << heures << ":" << minutes << std::endl;
 
-    int intHalfHourDaySystem;
-    if(systemDay == "Lundi"){
-        intHalfHourDaySystem = 0;
-    } else if (systemDay == "Mardi") {
-        intHalfHourDaySystem = 48;
-    } else if (systemDay == "Mercredi") {
-        intHalfHourDaySystem = 96;
-    } else if(systemDay == "Jeudi"){
-        intHalfHourDaySystem = 144;
-    } else if (systemDay == "Vendredi") {
-        intHalfHourDaySystem = 192;
-    } else if (systemDay == "Samedi") {
-        intHalfHourDaySystem = 240;
-    } else if (systemDay == "Dimanche") {
-        intHalfHourDaySystem = 288;
-    }
+    int intHalfHourDaySystem = ((systemDate.dayOfWeek() - 1) * 48) + (heures * 2);
 
-    //int calculHalfHour = heures * 2;
-    intHalfHourDaySystem += heures * 2;
-
+    // Si minutes > 30 on a passé une 1/2 heure supp
     if(minutes > 30){
         intHalfHourDaySystem += 1;
     }
 
     //std::cout << intHalfHourDaySystem << std::endl;
 
+    // On convertit la 1/2 courante sur 16 bits et on l'ajoute au bitArray global
     std::bitset<16> bit_halfHour(intHalfHourDaySystem);
-    //std::cout << bit_halfHour;
-
-    for(int k = 0; k < 16; k++){
+    //std::cout << bit_halfHour << std::endl;
+    for(int k = 15; k >= 0; k--){
         bitArrayCalendar[j] = bit_halfHour[k];
         j++;
     }
 
     /* TAUX HUMIDITE */
     int taux = ui->spinBox_tauxHumidite->value();
+    // On convertit le taux sur 8 bits et on l'ajoute au bitArray global
     std::bitset<8> bit_humidite(taux);
-    //std::cout << bit_humidite;
-
-    for(int l = 0; l < 8; l++){
+    for(int l = 7; l >= 0; l--){
         bitArrayCalendar[j] = bit_humidite[l];
         j++;
     }
 
-    //std::cout << j << std::endl;
-
-    for(int m =0; m < 360; m++){
+    //Affichage du tableau de bit -- peut être commenté
+    std::cout << "Le calendrier contient " << bitArrayCalendar.size() << " bits" << std::endl;
+    for(int m =0; m < bitArrayCalendar.size(); m++){
         std::cout << bitArrayCalendar[m];
     }
+    std::cout << std::endl;
+
+    ui->label_traitement->setVisible(true);
 
 
 }

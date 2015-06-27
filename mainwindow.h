@@ -29,8 +29,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    int calculSeconds(int hours, int minutes);
-
     QString _currentDay;
     QList<QCheckBox*> _listCheckBox;
 

@@ -8,10 +8,10 @@ CalendarDay Calendar::getCalendarDayByName(QString nameDay){
     foreach (CalendarDay day, _days) {
         if(day._day == nameDay){
             cd = day;
+            break;
         }
     }
 
     return cd;
 }
-
 

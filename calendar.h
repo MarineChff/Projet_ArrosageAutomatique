@@ -12,6 +12,7 @@ public:
     QList<CalendarDay> _days;
 
     CalendarDay getCalendarDayByName(QString nameDay);
+
 };
 
 #endif // CALENDAR_H

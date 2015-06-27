@@ -778,6 +778,22 @@
        <string>Enregistrer et terminer</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_traitement">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>231</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Le traitement est terminé !</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

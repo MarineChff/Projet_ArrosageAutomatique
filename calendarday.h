@@ -9,6 +9,7 @@ class CalendarDay
 public:
     CalendarDay();
 
+
     QString _day;
     QBitArray _bitArrayDay;
 };
