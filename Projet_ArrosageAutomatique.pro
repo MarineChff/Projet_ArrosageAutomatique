@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,10 +16,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     calendarday.cpp \
-    calendar.cpp
+    calendar.cpp \
+    controller.cpp \
+    serialportwriter.cpp
 
 HEADERS  += mainwindow.h \
     calendarday.h \
-    calendar.h
+    calendar.h \
+    controller.h \
+    serialportwriter.h
 
 FORMS    += mainwindow.ui

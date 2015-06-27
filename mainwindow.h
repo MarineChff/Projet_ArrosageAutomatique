@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "calendarday.h"
+#include "controller.h"
 #include "calendar.h"
 #include <QMainWindow>
 #include <QList>
@@ -33,7 +34,7 @@ private:
     QList<QCheckBox*> _listCheckBox;
 
     Calendar _calendar;
-
+    Controller _controller;
 };
 
 #endif // MAINWINDOW_H

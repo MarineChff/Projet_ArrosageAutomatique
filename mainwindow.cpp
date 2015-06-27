@@ -1,4 +1,3 @@
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <iostream>
@@ -14,8 +13,10 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _controller()
 {
+
     ui->setupUi(this);
     ui->label_validation->setVisible(false);
     ui->label_traitement->setVisible(false);
@@ -217,6 +218,10 @@ void MainWindow::on_pushButton_end_clicked()
         std::cout << bitArrayCalendar[m];
     }
     std::cout << std::endl;
+
+    // Envoi sur le PIC
+    _controller.setBits(bitArrayCalendar);
+
 
     ui->label_traitement->setVisible(true);
 
