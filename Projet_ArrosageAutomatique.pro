@@ -17,13 +17,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     calendarday.cpp \
     calendar.cpp \
-    controller.cpp \
-    serialportwriter.cpp
+    controller.cpp
 
 HEADERS  += mainwindow.h \
     calendarday.h \
     calendar.h \
-    controller.h \
-    serialportwriter.h
+    controller.h
 
 FORMS    += mainwindow.ui

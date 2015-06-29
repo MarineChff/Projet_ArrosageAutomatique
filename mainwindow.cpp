@@ -198,7 +198,8 @@ void MainWindow::on_pushButton_end_clicked()
     // On convertit la 1/2 courante sur 16 bits et on l'ajoute au bitArray global
     std::bitset<16> bit_halfHour(intHalfHourDaySystem);
     //std::cout << bit_halfHour << std::endl;
-    for(int k = 15; k >= 0; k--){
+    std::cout << intHalfHourDaySystem << std::endl;
+    for(int k = 15; k >= 0; --k){
         bitArrayCalendar[j] = bit_halfHour[k];
         j++;
     }
@@ -207,7 +208,7 @@ void MainWindow::on_pushButton_end_clicked()
     int taux = ui->spinBox_tauxHumidite->value();
     // On convertit le taux sur 8 bits et on l'ajoute au bitArray global
     std::bitset<8> bit_humidite(taux);
-    for(int l = 7; l >= 0; l--){
+    for(int l = 0; l < 8; ++l){
         bitArrayCalendar[j] = bit_humidite[l];
         j++;
     }
